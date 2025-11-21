@@ -1,2 +1,8 @@
 # Green Fn
+| No. | Name                                 | Matric No. |
+| --- | ------------------------------------ | ---------- |
+| 1   | AHMAD MUIZZUDDIN BIN AHMAD RIDZUAN   | 2211679    |
+| 2   | MUHAMMAD AFIF BIN HUSNAN             | 2212583    |
+| 3   | MUHAMMAD AMIR ZARIEFF BIN JEFNEE     | 2216919    |
+| 4   | MUHAMMAD AFLAH BIN MOHAMAD ZULKHAIRI | 2217393    |
 
