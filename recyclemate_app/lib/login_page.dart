@@ -1,12 +1,22 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'auth.dart';
 import 'routes.dart';
 
 
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
+  
+  /*final User? user = Auth().currentUser;
+
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
+  */
+
   
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -15,6 +25,42 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   var rememberMe= false;
+  
+  //FIREBASE AUTHENTICATION
+  /*String? errorMessage = '';
+  bool isLogin = true;
+
+  final TextEditingController _controllerEmail = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+
+  Future<void> signInWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+        email: _controllerEmail.text, 
+        password: _controllerPassword.text,
+        );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
+    }
+  }
+
+  Future<void> createUserWithEmailAndPassword() async {
+    try {
+      await Auth().signInWithEmailAndPassword(
+        email: _controllerEmail.text, 
+        password: _controllerPassword.text,
+        );
+    } on FirebaseAuthException catch (e) {
+        setState(() {
+          errorMessage = e.message;
+      });
+    }
+  }
+*/
+
+
 
   @override
   Widget build(BuildContext context) {

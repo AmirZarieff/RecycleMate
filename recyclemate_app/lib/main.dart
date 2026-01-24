@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         // home: const MyHomePage(title: 'Flutter Form Widget'),
         initialRoute: Routes.LoginPage,
         routes: {
-          Routes.LoginPage: (context) => const LoginPage(),
+          Routes.LoginPage: (context) =>  LoginPage(),
           Routes.RegisterPage: (context) => const RegisterPage(),
           Routes.ForgetPassword: (context) => const ForgetPassword(),
         });
