@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "139514138448",
+    "project_id": "mobile-app-development-94ed7",
+    "storage_bucket": "mobile-app-development-94ed7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139514138448:android:dc06498f85efb31fc66655",
+        "android_client_info": {
+          "package_name": "com.example.recyclemate_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2RU40We9jsLP3mu7Z5rW03qOhJ-9pTzY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
