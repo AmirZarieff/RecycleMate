@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/routes.dart';
+import '../services/firestore_data_seeder.dart';
 
 class HomePageDummy extends StatefulWidget {
   const HomePageDummy({Key? key}) : super(key: key);
@@ -33,10 +34,10 @@ class _HomePageDummyState extends State<HomePageDummy> {
 
     try {
       await _auth.signOut();
-      
+
       // Navigate back to login page after sign out
-      Navigator.pushNamed(context, Routes.OnStart);
-      
+      Navigator.pushNamed(context, Routes.onStart);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Signed out successfully'),
@@ -60,143 +61,294 @@ class _HomePageDummyState extends State<HomePageDummy> {
     }
   }
 
+  Future<void> _seedDatabase() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final seeder = FirestoreDataSeeder();
+      await seeder.seedDatabase();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sample data loaded successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading data: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
-          'Home',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+        backgroundColor: Colors.green[700],
+        title: const Text(
+          'RecycleMate',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: _signOut,
             tooltip: 'Sign Out',
           ),
         ],
       ),
-      backgroundColor: Colors.white,
-      body: Center(
+      backgroundColor: Colors.grey[100],
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
+            // Welcome Section
             Container(
-              margin: const EdgeInsets.only(top: 50, bottom: 30),
-              child: const Text(
-                'Hi! HomePage',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Color.fromARGB(255, 125, 39, 39),
-                  fontWeight: FontWeight.bold,
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.green[700]!, Colors.green[500]!],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Welcome to',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'RecycleMate',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  if (_user != null && _user!.email != null)
+                    Text(
+                      _user!.email!,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                ],
               ),
             ),
-            
-            // Display user email if available
-            if (_user != null && _user!.email != null)
-              Container(
-                margin: EdgeInsets.only(bottom: 30),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.blue[100]!),
-                ),
-                child: Text(
-                  'Logged in as: ${_user!.email}',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue[800],
+
+            // Main Features Grid
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Features',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                ),
-              ),
-            
-            // Large sign out button
-            Container(
-              margin: EdgeInsets.only(top: 50),
-              width: 200,
-              child: ElevatedButton(
-                child: _isLoading
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  const SizedBox(height: 16),
+
+                  // Search Feature Card
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.search,
+                    title: 'Search Items',
+                    description: 'Find out if an item is recyclable',
+                    color: Colors.blue,
+                    onTap: () =>
+                        Navigator.pushNamed(context, Routes.searchPage),
+                  ),
+
+                  // Educational Guide Card
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.book,
+                    title: 'Recycling Guide',
+                    description: 'Learn recycling tips and best practices',
+                    color: Colors.green,
+                    onTap: () =>
+                        Navigator.pushNamed(context, Routes.educationalGuide),
+                  ),
+
+                  // Scanner Feature Card (Placeholder)
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.camera_alt,
+                    title: 'Scan Item',
+                    description: 'Use camera to identify items',
+                    color: Colors.purple,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Scanner feature coming soon!'),
                         ),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      );
+                    },
+                  ),
+
+                  // Activity Tracker Card (Placeholder)
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.bar_chart,
+                    title: 'Activity Tracker',
+                    description: 'Track your recycling progress',
+                    color: Colors.orange,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Tracker feature coming soon!'),
+                        ),
+                      );
+                    },
+                  ),
+
+                  // Database Seeder (Admin Feature)
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Admin Tools',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  Card(
+                    color: Colors.blue[50],
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.logout, size: 20),
-                          SizedBox(width: 8),
-                          Text('Sign Out'),
+                          const Text(
+                            'Load Sample Data',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Click below to populate the database with sample recyclable items for testing the search feature.',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: _isLoading ? null : _seedDatabase,
+                              icon: _isLoading
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Icon(Icons.cloud_upload),
+                              label: Text(
+                                _isLoading ? 'Loading...' : 'Load Sample Data',
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[700],
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                onPressed: _isLoading ? null : _signOut,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.redAccent,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  elevation: 5,
-                  shadowColor: Colors.black.withOpacity(0.3),
-                ),
+                ],
               ),
-            ),
-            
-            // Additional smaller sign out option
-            SizedBox(height: 30),
-            TextButton(
-              onPressed: _signOut,
-              child: Text(
-                'Sign Out from here',
-                style: TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            
-            // Status indicator
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: _isLoading
-                  ? Column(
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 10),
-                        Text('Signing out...', style: TextStyle(color: Colors.grey)),
-                      ],
-                    )
-                  : null,
             ),
           ],
         ),
       ),
-      
-      // Floating Action Button for sign out (optional)
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _signOut,
-        backgroundColor: Colors.redAccent,
-        foregroundColor: Colors.white,
-        icon: Icon(Icons.logout),
-        label: Text('Sign Out'),
-        heroTag: 'signOutFab',
+    );
+  }
+
+  Widget _buildFeatureCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String description,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, size: 32, color: color),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 20),
+            ],
+          ),
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

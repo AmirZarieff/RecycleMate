@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:recyclemate_app/Pages/forget_password.dart';
 
-
 import '../services/routes.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,11 +17,9 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  
+
   bool _isLoading = false;
   String? _errorMessage;
-
- 
 
   // FIREBASE AUTHENTICATION FOR SIGN IN BUTTON
   Future<void> signIn() async {
@@ -40,10 +37,8 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      
-      
-      Navigator.pushNamed(context, Routes.HomePageDummy);
-      
+
+      Navigator.pushNamed(context, Routes.homePageDummy);
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
@@ -65,17 +60,14 @@ class _LoginPageState extends State<LoginPage> {
         default:
           errorMessage = 'An error occurred. Please try again.';
       }
-      
+
       setState(() {
         _errorMessage = errorMessage;
       });
-      
+
       // Optionally show a snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     } catch (e) {
       setState(() {
@@ -88,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  
   @override
   void dispose() {
     emailController.dispose();
@@ -104,10 +95,7 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF004E92),
-              Color(0xFF000428),
-            ],
+            colors: [Color(0xFF004E92), Color(0xFF000428)],
           ),
         ),
         child: Center(
@@ -120,10 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   margin: const EdgeInsets.only(top: 150.0),
                   child: const Text(
                     'Hey there!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 30),
                   ),
                 ),
                 Container(
@@ -137,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                
+
                 // Error Message Display
                 if (_errorMessage != null)
                   Container(
@@ -162,18 +147,18 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                
+
                 Container(
                   width: 380,
                   child: TextFormField(
                     controller: emailController,
                     cursorColor: Colors.white,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 13,
+                        horizontal: 10,
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7),
                         borderSide: BorderSide(color: Colors.white, width: 2),
@@ -190,8 +175,8 @@ class _LoginPageState extends State<LoginPage> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (email) =>
                         email != null && !EmailValidator.validate(email)
-                            ? 'Enter a valid email'
-                            : null,
+                        ? 'Enter a valid email'
+                        : null,
                   ),
                 ),
                 Container(
@@ -199,14 +184,14 @@ class _LoginPageState extends State<LoginPage> {
                   margin: EdgeInsets.only(top: 30),
                   child: TextFormField(
                     controller: passwordController,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(color: Colors.white),
                     obscureText: true,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 13,
+                        horizontal: 10,
+                      ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(7),
                         borderSide: BorderSide(color: Colors.white, width: 2),
@@ -237,7 +222,8 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ForgetPassword()),
+                            builder: (context) => ForgetPassword(),
+                          ),
                         );
                       },
                       child: Text(
@@ -250,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 15)
+                    SizedBox(width: 15),
                   ],
                 ),
                 Container(
@@ -263,8 +249,9 @@ class _LoginPageState extends State<LoginPage> {
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         : const Text("Login"),
@@ -272,10 +259,14 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.blueAccent,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 60, vertical: 13),
-                      textStyle:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 60,
+                        vertical: 13,
+                      ),
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadiusGeometry.circular(7),
                       ),
@@ -291,9 +282,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         TextSpan(
                           text: 'Do not have an account yet? ',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                          style: TextStyle(color: Colors.white),
                         ),
                         TextSpan(
                           text: 'Sign Up',
@@ -304,10 +293,10 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushNamed(context, Routes.RegisterPage);
+                              Navigator.pushNamed(context, Routes.registerPage);
                               print('Sign Up Tapped');
                             },
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -317,26 +306,17 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Divider(
-                          color: Colors.white,
-                          thickness: 1,
-                        ),
+                        child: Divider(color: Colors.white, thickness: 1),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Text(
                           "or",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 17),
                         ),
                       ),
                       Expanded(
-                        child: Divider(
-                          color: Colors.white,
-                          thickness: 1,
-                        ),
+                        child: Divider(color: Colors.white, thickness: 1),
                       ),
                     ],
                   ),
@@ -367,8 +347,10 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
                       backgroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 13),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 13,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -376,7 +358,7 @@ class _LoginPageState extends State<LoginPage> {
                       shadowColor: Colors.black.withOpacity(0.5),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

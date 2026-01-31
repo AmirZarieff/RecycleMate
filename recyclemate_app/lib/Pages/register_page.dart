@@ -17,7 +17,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  
+
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -34,9 +34,10 @@ class _RegisterPageState extends State<RegisterPage> {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    
+
     // Check if passwords match
-    if (passwordController.text.trim() != confirmPasswordController.text.trim()) {
+    if (passwordController.text.trim() !=
+        confirmPasswordController.text.trim()) {
       Utils.showSnackBar(context, 'Passwords do not match');
       return;
     }
@@ -51,10 +52,9 @@ class _RegisterPageState extends State<RegisterPage> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      
+
       // Success - navigate to home page
-      Navigator.pushReplacementNamed(context, Routes.HomePageDummy);
-      
+      Navigator.pushReplacementNamed(context, Routes.homePageDummy);
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
@@ -73,13 +73,12 @@ class _RegisterPageState extends State<RegisterPage> {
         default:
           errorMessage = 'An error occurred. Please try again.';
       }
-      
+
       setState(() {
         _errorMessage = errorMessage;
       });
-      
+
       Utils.showSnackBar(context, errorMessage);
-      
     } catch (e) {
       String errorMessage = 'An unexpected error occurred.';
       setState(() {
@@ -129,42 +128,39 @@ class _RegisterPageState extends State<RegisterPage> {
                     ],
                   ),
                 ),
-              
+
               Container(
-                margin: EdgeInsets.only(top: _errorMessage == null ? 150.0 : 30.0),
-                child: const Text(
-                  'Hey there!',
-                  style: TextStyle(
-                    fontSize: 30,
-                  ),
+                margin: EdgeInsets.only(
+                  top: _errorMessage == null ? 150.0 : 30.0,
                 ),
+                child: const Text('Hey there!', style: TextStyle(fontSize: 30)),
               ),
-              
+
               Container(
                 margin: const EdgeInsets.only(bottom: 50.0),
                 child: const Text(
                   'Create an Account',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                 ),
               ),
-                Container(
+              Container(
                 width: 350,
                 margin: EdgeInsets.only(top: 30),
                 child: TextFormField(
                   controller: emailController,
                   cursorColor: Colors.blue,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 13,
+                      horizontal: 10,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.grey, width: 2)
+                      borderSide: BorderSide(color: Colors.grey, width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.blue, width: 3)
+                      borderSide: BorderSide(color: Colors.blue, width: 3),
                     ),
                     hintText: 'Email',
                     hintStyle: TextStyle(color: Colors.grey),
@@ -173,12 +169,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (email) =>
-                    email != null && !EmailValidator.validate(email)
-                        ? 'Enter a valid email'
-                        : null,
+                      email != null && !EmailValidator.validate(email)
+                      ? 'Enter a valid email'
+                      : null,
                 ),
               ),
-              
+
               Container(
                 width: 350,
                 margin: EdgeInsets.only(top: 30),
@@ -187,14 +183,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 13,
+                      horizontal: 10,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.grey, width: 2)
+                      borderSide: BorderSide(color: Colors.grey, width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.blue, width: 3)
+                      borderSide: BorderSide(color: Colors.blue, width: 3),
                     ),
                     hintText: 'Password',
                     hintStyle: TextStyle(color: Colors.grey),
@@ -207,7 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       : null,
                 ),
               ),
-              
+
               Container(
                 width: 350,
                 margin: EdgeInsets.only(top: 30),
@@ -216,14 +215,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 13,
+                      horizontal: 10,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.grey, width: 2)
+                      borderSide: BorderSide(color: Colors.grey, width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.blue, width: 3)
+                      borderSide: BorderSide(color: Colors.blue, width: 3),
                     ),
                     hintText: 'Confirm Password',
                     hintStyle: TextStyle(color: Colors.grey),
@@ -242,7 +244,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                 ),
               ),
-              
+
               Container(
                 margin: const EdgeInsets.only(top: 70),
                 width: 350,
@@ -253,7 +255,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Text("Sign Up"),
@@ -262,16 +266,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.blue,
                     padding: EdgeInsets.symmetric(horizontal: 60, vertical: 13),
-                    textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    textStyle: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadiusGeometry.circular(7),
                     ),
                     elevation: 5,
-                    shadowColor: Colors.black.withOpacity(0.5)
+                    shadowColor: Colors.black.withOpacity(0.5),
                   ),
                 ),
               ),
-              
+
               Container(
                 margin: EdgeInsets.only(top: 15, bottom: 30),
                 child: RichText(
@@ -279,9 +286,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       TextSpan(
                         text: 'Already have an account ? ',
-                        style: TextStyle (
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(color: Colors.black),
                       ),
                       TextSpan(
                         text: 'Log In',
@@ -291,14 +296,14 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontWeight: FontWeight.w500,
                         ),
                         recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.pushNamed(context, Routes.LoginPage);
-                          print('Log In Tapped');
-                        }
-                      )
-                    ]
-                  )
-                )
+                          ..onTap = () {
+                            Navigator.pushNamed(context, Routes.loginPage);
+                            print('Log In Tapped');
+                          },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
