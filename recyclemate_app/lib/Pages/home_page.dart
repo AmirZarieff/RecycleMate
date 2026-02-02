@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/routes.dart';
 
 class HomePageDummy extends StatefulWidget {
@@ -25,13 +25,23 @@ class _HomePageDummyState extends State<HomePageDummy> {
     setState(() => _isLoading = true);
     try {
       await _auth.signOut();
-      Navigator.pushNamedAndRemoveUntil(context, Routes.OnStart, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.OnStart,
+        (route) => false,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Signed out successfully'), backgroundColor: Colors.green),
+        const SnackBar(
+          content: Text('Signed out successfully'),
+          backgroundColor: Colors.green,
+        ),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error signing out: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Error signing out: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -45,9 +55,16 @@ class _HomePageDummyState extends State<HomePageDummy> {
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text('Home', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Home',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: _signOut, tooltip: 'Sign Out'),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _signOut,
+            tooltip: 'Sign Out',
+          ),
         ],
       ),
       backgroundColor: Colors.white,
@@ -72,7 +89,8 @@ class _HomePageDummyState extends State<HomePageDummy> {
                 // Extract username from the Firestore document
                 String displayName = "User";
                 if (snapshot.hasData && snapshot.data!.exists) {
-                  Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                  Map<String, dynamic> data =
+                      snapshot.data!.data() as Map<String, dynamic>;
                   displayName = data['username'] ?? "User";
                 }
 
@@ -98,11 +116,14 @@ class _HomePageDummyState extends State<HomePageDummy> {
                 style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
             ),
-            
+
             if (_user != null && _user!.email != null)
               Container(
                 margin: const EdgeInsets.only(bottom: 30),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.blue[50],
                   borderRadius: BorderRadius.circular(10),
@@ -113,7 +134,67 @@ class _HomePageDummyState extends State<HomePageDummy> {
                   style: TextStyle(fontSize: 14, color: Colors.blue[800]),
                 ),
               ),
-            
+
+            // Scan Button
+            SizedBox(
+              width: 250,
+              child: ElevatedButton.icon(
+                onPressed: () =>
+                    Navigator.pushNamed(context, Routes.ScanScreen),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Color.fromARGB(255, 39, 176, 39),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 5,
+                ),
+                icon: const Icon(Icons.camera_alt, size: 24),
+                label: const Text('Scan Recyclables'),
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            // Scan History Button
+            SizedBox(
+              width: 250,
+              child: OutlinedButton.icon(
+                onPressed: () =>
+                    Navigator.pushNamed(context, Routes.ScanHistoryScreen),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Color.fromARGB(255, 39, 176, 39),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  side: BorderSide(
+                    color: Color.fromARGB(255, 39, 176, 39),
+                    width: 2,
+                  ),
+                ),
+                icon: const Icon(Icons.history, size: 24),
+                label: const Text('Scan History'),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
             SizedBox(
               width: 200,
               child: ElevatedButton(
@@ -121,15 +202,29 @@ class _HomePageDummyState extends State<HomePageDummy> {
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.redAccent,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                  textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   elevation: 5,
                 ),
                 child: _isLoading
                     ? const SizedBox(
-                        height: 20, width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
                       )
                     : const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -141,12 +236,12 @@ class _HomePageDummyState extends State<HomePageDummy> {
                       ),
               ),
             ),
-            
+
             const SizedBox(height: 100),
           ],
         ),
       ),
-      
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _signOut,
         backgroundColor: Colors.redAccent,
