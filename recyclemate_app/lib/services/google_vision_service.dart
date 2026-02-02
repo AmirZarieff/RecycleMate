@@ -3,9 +3,17 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 class GoogleVisionService {
-  static const String _apiKey = 'AIzaSyDXzlGPGc7yA69bKOpfNlzoKC-tE7plWFo';
-  static const String _apiUrl =
-      'https://vision.googleapis.com/v1/images:annotate?key=$_apiKey';
+  static const String _apiKey =
+      String.fromEnvironment('GOOGLE_VISION_API_KEY');
+
+  static String get _apiUrl {
+    if (_apiKey.isEmpty) {
+      throw Exception(
+        'GOOGLE_VISION_API_KEY is not set. Pass it via --dart-define.',
+      );
+    }
+    return 'https://vision.googleapis.com/v1/images:annotate?key=$_apiKey';
+  }
 
   /// Analyze an image file and return detected labels
   static Future<List<String>> analyzeImage(File imageFile) async {
