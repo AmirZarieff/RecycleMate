@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:recyclemate_app/Pages/forget_password.dart';
 import 'package:recyclemate_app/Pages/home_page.dart';
 import 'package:recyclemate_app/Pages/onboard_page.dart';
+import 'package:recyclemate_app/Pages/search_page.dart';
+import 'package:recyclemate_app/Pages/educational_guide_page.dart';
 import 'services/routes.dart';
 import 'Pages/login_page.dart';
 import 'Pages/register_page.dart';
@@ -10,7 +12,7 @@ import 'screens/scan_history_screen.dart';
 import 'screens/scan_screen.dart';
 
 void main() async {
-  //Initialize Firebase
+  // Initialize Firebase
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -25,76 +27,18 @@ class MyApp extends StatelessWidget {
       title: 'RecycleMate',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Inter'),
-      initialRoute: Routes.OnStart,
+      initialRoute: Routes.onStart,
       routes: {
-        Routes.OnStart: (context) => OnStart(),
-        Routes.LoginPage: (context) => LoginPage(),
-        Routes.RegisterPage: (context) => const RegisterPage(),
-        Routes.ForgetPassword: (context) => const ForgetPassword(),
-        Routes.HomePageDummy: (context) => const HomePageDummy(),
-        '/scan': (context) => const ScanScreen(),
-        '/scan-history': (context) => const ScanHistoryScreen(),
+        Routes.onStart: (context) => const OnStart(),
+        Routes.loginPage: (context) => const LoginPage(),
+        Routes.registerPage: (context) => const RegisterPage(),
+        Routes.forgetPassword: (context) => const ForgetPassword(),
+        Routes.homePageDummy: (context) => const HomePageDummy(),
+        Routes.scanScreen: (context) => const ScanScreen(),
+        Routes.scanHistoryScreen: (context) => const ScanHistoryScreen(),
+        Routes.searchPage: (context) => const SearchPage(),
+        Routes.educationalGuide: (context) => const EducationalGuidePage(),
       },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

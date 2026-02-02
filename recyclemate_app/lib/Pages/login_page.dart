@@ -439,7 +439,7 @@ class _LoginPageState extends State<LoginPage> {
                               ..onTap = () {
                                 Navigator.pushNamed(
                                   context,
-                                  Routes.RegisterPage,
+                                  Routes.registerPage,
                                 );
                                 print('Sign Up Tapped');
                               },

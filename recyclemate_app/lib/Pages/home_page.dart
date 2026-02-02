@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/routes.dart';
+import '../services/firestore_data_seeder.dart';
 
 class HomePageDummy extends StatefulWidget {
   const HomePageDummy({super.key});
@@ -27,7 +28,7 @@ class _HomePageDummyState extends State<HomePageDummy> {
       await _auth.signOut();
       Navigator.pushNamedAndRemoveUntil(
         context,
-        Routes.OnStart,
+        Routes.onStart,
         (route) => false,
       );
       ScaffoldMessenger.of(context).showSnackBar(
@@ -48,17 +49,51 @@ class _HomePageDummyState extends State<HomePageDummy> {
     }
   }
 
+  Future<void> _seedDatabase() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final seeder = FirestoreDataSeeder();
+      await seeder.seedDatabase();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sample data loaded successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error loading data: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: Colors.green[700],
         title: const Text(
-          'Home',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          'RecycleMate',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -67,190 +102,231 @@ class _HomePageDummyState extends State<HomePageDummy> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
-      body: Center(
+      backgroundColor: Colors.grey[100],
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Real-time Username Display using StreamBuilder
-            StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(_user?.uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text("Error loading name");
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-
-                // Extract username from the Firestore document
-                String displayName = "User";
-                if (snapshot.hasData && snapshot.data!.exists) {
-                  Map<String, dynamic> data =
-                      snapshot.data!.data() as Map<String, dynamic>;
-                  displayName = data['username'] ?? "User";
-                }
-
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: Text(
-                    'Hi, $displayName!',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
+          children: [
+            // Welcome Section with user info
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.green[700]!, Colors.green[500]!],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Welcome to',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'RecycleMate',
+                    style: TextStyle(
                       fontSize: 32,
-                      color: Color.fromARGB(255, 39, 176, 39),
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
-            ),
-
-            Container(
-              margin: const EdgeInsets.only(bottom: 30),
-              child: const Text(
-                'Welcome to RecycleMate',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                  const SizedBox(height: 8),
+                  if (_user != null && _user!.email != null)
+                    Text(
+                      _user!.email!,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                ],
               ),
             ),
 
-            if (_user != null && _user!.email != null)
-              Container(
-                margin: const EdgeInsets.only(bottom: 30),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.blue[100]!),
-                ),
-                child: Text(
-                  'Logged in as: ${_user!.email}',
-                  style: TextStyle(fontSize: 14, color: Colors.blue[800]),
-                ),
-              ),
+            // Main Features Grid
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Features',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16),
 
-            // Scan Button
-            SizedBox(
-              width: 250,
-              child: ElevatedButton.icon(
-                onPressed: () =>
-                    Navigator.pushNamed(context, Routes.ScanScreen),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color.fromARGB(255, 39, 176, 39),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 15,
+                  // Scan Feature Card
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.camera_alt,
+                    title: 'Scan Recyclables',
+                    description: 'Use camera to identify and scan items',
+                    color: Colors.purple,
+                    onTap: () =>
+                        Navigator.pushNamed(context, Routes.scanScreen),
                   ),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 5,
-                ),
-                icon: const Icon(Icons.camera_alt, size: 24),
-                label: const Text('Scan Recyclables'),
-              ),
-            ),
 
-            const SizedBox(height: 15),
+                  // Scan History Card
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.history,
+                    title: 'Scan History',
+                    description: 'View your past scan records',
+                    color: Colors.orange,
+                    onTap: () =>
+                        Navigator.pushNamed(context, Routes.scanHistoryScreen),
+                  ),
 
-            // Scan History Button
-            SizedBox(
-              width: 250,
-              child: OutlinedButton.icon(
-                onPressed: () =>
-                    Navigator.pushNamed(context, Routes.ScanHistoryScreen),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Color.fromARGB(255, 39, 176, 39),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 15,
+                  // Search Feature Card
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.search,
+                    title: 'Search Items',
+                    description: 'Find out if an item is recyclable',
+                    color: Colors.blue,
+                    onTap: () =>
+                        Navigator.pushNamed(context, Routes.searchPage),
                   ),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  side: BorderSide(
-                    color: Color.fromARGB(255, 39, 176, 39),
-                    width: 2,
-                  ),
-                ),
-                icon: const Icon(Icons.history, size: 24),
-                label: const Text('Scan History'),
-              ),
-            ),
 
-            const SizedBox(height: 30),
+                  // Educational Guide Card
+                  _buildFeatureCard(
+                    context,
+                    icon: Icons.book,
+                    title: 'Recycling Guide',
+                    description: 'Learn recycling tips and best practices',
+                    color: Colors.green,
+                    onTap: () =>
+                        Navigator.pushNamed(context, Routes.educationalGuide),
+                  ),
 
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _signOut,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.redAccent,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 15,
+                  // Database Seeder (Admin Feature)
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Admin Tools',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 5,
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.white,
-                          ),
-                        ),
-                      )
-                    : const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  const SizedBox(height: 12),
+                  Card(
+                    color: Colors.blue[50],
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.logout, size: 20),
-                          SizedBox(width: 8),
-                          Text('Sign Out'),
+                          const Text(
+                            'Load Sample Data',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Click below to populate the database with sample recyclable items for testing the search feature.',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: _isLoading ? null : _seedDatabase,
+                              icon: _isLoading
+                                  ? const SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Icon(Icons.cloud_upload),
+                              label: Text(
+                                _isLoading ? 'Loading...' : 'Load Sample Data',
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[700],
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
+                    ),
+                  ),
+                ],
               ),
             ),
-
-            const SizedBox(height: 100),
           ],
         ),
       ),
+    );
+  }
 
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _signOut,
-        backgroundColor: Colors.redAccent,
-        foregroundColor: Colors.white,
-        icon: const Icon(Icons.logout),
-        label: const Text('Quick Logout'),
-        heroTag: 'signOutFab',
+  Widget _buildFeatureCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String description,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, size: 32, color: color),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      description,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 20),
+            ],
+          ),
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

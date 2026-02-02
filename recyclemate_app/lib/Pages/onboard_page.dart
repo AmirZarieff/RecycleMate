@@ -167,7 +167,7 @@ class _OnStartState extends State<OnStart> {
             child: ElevatedButton(
               onPressed: () {
                 if (_currentPage == _pages.length - 1) {
-                  Navigator.pushReplacementNamed(context, Routes.RegisterPage);
+                  Navigator.pushReplacementNamed(context, Routes.registerPage);
                 } else {
                   _pageController.nextPage(
                     duration: Duration(milliseconds: 300),
@@ -199,7 +199,7 @@ class _OnStartState extends State<OnStart> {
               padding: EdgeInsets.only(top: 5),
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, Routes.LoginPage);
+                  Navigator.pushReplacementNamed(context, Routes.loginPage);
                 },
                 child: Text(
                   'Skip',
@@ -226,7 +226,7 @@ class _OnStartState extends State<OnStart> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, Routes.LoginPage);
+                      Navigator.pushReplacementNamed(context, Routes.loginPage);
                     },
                     child: Text(
                       'Sign In',
