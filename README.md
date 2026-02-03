@@ -154,35 +154,36 @@ Our group wanted to develop an app that solves a real-world problem while being 
    We implemented all core features proposed in the project initiation phase. The development was organized into distinct modules to ensure the application was easy to test and debug:
    
    -User Authentication:
-   
       1.We established a secure login system using Firebase Authentication, allowing users to register and sign in reliably.
       2.To maintain data quality, we integrated the email_validator package. This ensures that all user inputs are validated for correct formatting before being sent to the backend.
    
-   *Item Scanning & Classification:
+   -Item Scanning & Classification:
       1.The scanning module utilizes the image_picker package to interface with the device's camera and gallery.
       2.For image analysis, we developed a custom GoogleVisionService. Instead of processing images locally, this service converts images to Base64 format and transmits them securely to the Google Cloud Vision API via HTTP requests. The API            analyzes the image content and returns label annotations (e.g., "Plastic," "Glass").
       3.These labels are then processed by our ItemClassifier to determine the correct waste category and display disposal instructions.
 
-   *Activity Tracker:
+   -Activity Tracker:
       1.We implemented a complete CRUD (Create, Read, Update, Delete) system for tracking recycling habits, with data persistently stored in Cloud Firestore.
       2.To visualize user progress, we integrated the fl_chart library, which renders dynamic bar and line charts on the ProgressSummaryScreen.
 
-   *Manual Search:
+   -Manual Search:
       1.A manual search feature allows users to query the Firestore database directly. This ensures users can find recycling guidelines even if the scanner cannot identify an item.
 
 4.2 **Code Structure and Architecture**
+
    To ensure the project remains maintainable and collaborative, we adopted a Layered Architecture that separates different aspects of the code:
-
-   *1.Presentation Layer (UI):
-      All user interface components are located in the lib/screens/ and lib/Pages/ directories. These screens are built using modular Flutter widgets to ensure a consistent design across different devices.
-
-   *2.Service Layer (Logic):
-   Business logic and external API interactions are abstracted into the lib/services/ directory. For instance, google_vision_service.dart handles API communication, while recycling_activity_service.dart manages database operations. This       separation keeps the UI code clean and focused on display logic.
-
-   *3.Data Layer (Models):
-   We defined specific data models, such as ScanRecord and RecyclingActivity, in the lib/models/ directory. These classes ensure data consistency and type safety throughout the application.
+   
+   1.Presentation Layer (UI):
+      All user interface components are located in the lib/screens/ and lib/Pages/ directories. These screens are built using modular Flutter widgets to ensure a consistent design across different devices.|
+      
+   2.Service Layer (Logic):
+      Business logic and external API interactions are abstracted into the lib/services/ directory. For instance, google_vision_service.dart handles API communication, while recycling_activity_service.dart manages database operations. This       separation keeps the UI code clean and focused on display logic.
+      
+   3.Data Layer (Models):
+      We defined specific data models, such as ScanRecord and RecyclingActivity, in the lib/models/ directory. These classes ensure data consistency and type safety throughout the application.
 
 4.3 **Packages and Dependencies**
+
    The application leverages several key packages to extend its functionality:
    
    1.firebase_core & cloud_firestore: facilitates connection to the Firebase backend and enables real-time database storage.
@@ -192,16 +193,18 @@ Our group wanted to develop an app that solves a real-world problem while being 
    5.intl: handles date formatting to ensure timestamps are displayed correctly in the activity logs.
 
 4.4 **Backend Infrastructure (Firebase)**
+
    We selected Firebase to provide a scalable backend infrastructure without the need for managing physical servers.
 
-   *Authentication: Centralizes user management and secures session tokens.
-   *Cloud Firestore: Stores user profiles, scan history, and activity logs in a flexible, document-based structure that supports efficient querying.
+   -Authentication: Centralizes user management and secures session tokens.
+   -Cloud Firestore: Stores user profiles, scan history, and activity logs in a flexible, document-based structure that supports efficient querying.
 
 4.5 **Collaborative Development**
+
    The project was managed using GitHub to facilitate teamwork.
 
-   *Branching Strategy: We utilized feature branches (e.g., feature/scanner, feature/auth) to isolate development tasks and prevent conflicts.
-   *Code Review: Pull requests were used to review and merge code into the main branch, ensuring stability and code quality.
+   -Branching Strategy: We utilized feature branches (e.g., feature/scanner, feature/auth) to isolate development tasks and prevent conflicts.
+   -Code Review: Pull requests were used to review and merge code into the main branch, ensuring stability and code quality.
 
 5. **References**
 
