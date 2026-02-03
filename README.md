@@ -131,6 +131,7 @@ Our group wanted to develop an app that solves a real-world problem while being 
 
 ---
 
+## 2. Requirement Analysis & Training
 
 
 
@@ -141,8 +142,7 @@ Our group wanted to develop an app that solves a real-world problem while being 
 
 
 
-
-### 4. Project Development
+## 4. Project Development
 
 The development of RecycleMate focused on building a reliable and scalable mobile application. We utilized Flutter for cross-platform development to ensure a smooth user interface on Android, while Firebase was selected as our Backend-as-a-Service (BaaS) to manage data and authentication securely and efficiently.
 
