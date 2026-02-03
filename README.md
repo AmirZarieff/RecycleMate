@@ -379,6 +379,11 @@ Routes:
 
 ---
 
+## Gantt Chart
+
+<img width="1387" height="643" alt="image" src="https://github.com/user-attachments/assets/3dd994e5-41ac-4189-bfca-4c8a93f343eb" />
+
+
 ## 4. Project Development
 
 The development of RecycleMate focused on building a reliable and scalable mobile application. We utilized Flutter for cross-platform development to ensure a smooth user interface on Android, while Firebase was selected as our Backend-as-a-Service (BaaS) to manage data and authentication securely and efficiently.
