@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart'; 
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../services/routes.dart';
 import '../services/firestore_data_seeder.dart';
 
@@ -20,6 +24,32 @@ class _HomePageDummyState extends State<HomePageDummy> {
   void initState() {
     super.initState();
     _user = _auth.currentUser;
+  }
+
+  Future<void> _confirmSignOut() async {
+    final shouldSignOut = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldSignOut == true) {
+      _signOut();
+    }
   }
 
   Future<void> _signOut() async {
@@ -97,7 +127,7 @@ class _HomePageDummyState extends State<HomePageDummy> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: _signOut,
+            onPressed: _confirmSignOut,
             tooltip: 'Sign Out',
           ),
         ],
@@ -120,6 +150,31 @@ class _HomePageDummyState extends State<HomePageDummy> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Username display with StreamBuilder
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(_user?.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      String displayName = "User";
+                      if (snapshot.hasData && snapshot.data!.exists) {
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        displayName = data['username'] ?? "User";
+                      }
+
+                      return Text(
+                        'Hi, $displayName!',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 4),
                   const Text(
                     'Welcome to',
                     style: TextStyle(fontSize: 18, color: Colors.white),

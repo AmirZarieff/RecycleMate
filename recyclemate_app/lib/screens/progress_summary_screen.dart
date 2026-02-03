@@ -15,6 +15,20 @@ class _ProgressSummaryScreenState extends State<ProgressSummaryScreen> {
   final RecyclingActivityService _activityService = RecyclingActivityService();
   final String userId = 'demo_user'; // Replace with actual user ID
   String _selectedPeriod = 'weekly'; // 'weekly', 'monthly', 'all-time'
+  late Future<Map<String, dynamic>> _summaryFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _summaryFuture = _getSummaryData();
+  }
+
+  void _updatePeriod(String period) {
+    setState(() {
+      _selectedPeriod = period;
+      _summaryFuture = _getSummaryData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +50,7 @@ class _ProgressSummaryScreenState extends State<ProgressSummaryScreen> {
                     child: _PeriodButton(
                       label: 'Weekly',
                       isSelected: _selectedPeriod == 'weekly',
-                      onTap: () => setState(() => _selectedPeriod = 'weekly'),
+                      onTap: () => _updatePeriod('weekly'),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -44,7 +58,7 @@ class _ProgressSummaryScreenState extends State<ProgressSummaryScreen> {
                     child: _PeriodButton(
                       label: 'Monthly',
                       isSelected: _selectedPeriod == 'monthly',
-                      onTap: () => setState(() => _selectedPeriod = 'monthly'),
+                      onTap: () => _updatePeriod('monthly'),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -52,7 +66,7 @@ class _ProgressSummaryScreenState extends State<ProgressSummaryScreen> {
                     child: _PeriodButton(
                       label: 'All Time',
                       isSelected: _selectedPeriod == 'all-time',
-                      onTap: () => setState(() => _selectedPeriod = 'all-time'),
+                      onTap: () => _updatePeriod('all-time'),
                     ),
                   ),
                 ],
@@ -61,7 +75,7 @@ class _ProgressSummaryScreenState extends State<ProgressSummaryScreen> {
 
             // Summary Cards
             FutureBuilder<Map<String, dynamic>>(
-              future: _getSummaryData(),
+              future: _summaryFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
