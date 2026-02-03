@@ -132,79 +132,77 @@ Our group wanted to develop an app that solves a real-world problem while being 
 ---
 
 
-4. Project Development
-The development of RecycleMate focused on building a reliable and scalable mobile application. We utilized Flutter for cross-platform development to ensure a smooth user interface on Android, while Firebase was selected as our Backend-as-a-Service (BaaS) to manage data and authentication securely and efficiently.
 
-4.1 Functional Implementation
-We implemented all core features proposed in the project initiation phase. The development was organized into distinct modules to ensure the application was easy to test and debug:
 
-User Authentication:
 
-We established a secure login system using Firebase Authentication, allowing users to register and sign in reliably.
 
-To maintain data quality, we integrated the email_validator package. This ensures that all user inputs are validated for correct formatting before being sent to the backend.
 
-Item Scanning & Classification:
 
-The scanning module utilizes the image_picker package to interface with the device's camera and gallery.
 
-For image analysis, we developed a custom GoogleVisionService. Instead of processing images locally, this service converts images to Base64 format and transmits them securely to the Google Cloud Vision API via HTTP requests. The API analyzes the image content and returns label annotations (e.g., "Plastic," "Glass").
 
-These labels are then processed by our ItemClassifier to determine the correct waste category and display disposal instructions.
 
-Activity Tracker:
 
-We implemented a complete CRUD (Create, Read, Update, Delete) system for tracking recycling habits, with data persistently stored in Cloud Firestore.
 
-To visualize user progress, we integrated the fl_chart library, which renders dynamic bar and line charts on the ProgressSummaryScreen.
 
-Manual Search:
 
-A manual search feature allows users to query the Firestore database directly. This ensures users can find recycling guidelines even if the scanner cannot identify an item.
+4. **Project Development**
 
-4.2 Code Structure and Architecture
-To ensure the project remains maintainable and collaborative, we adopted a Layered Architecture that separates different aspects of the code:
+   The development of RecycleMate focused on building a reliable and scalable mobile application. We utilized Flutter for cross-platform development to ensure a smooth user interface on Android, while Firebase was selected as our Backend-as-a-Service (BaaS) to manage data and authentication securely and efficiently.
 
-Presentation Layer (UI):
+4.1 **Functional Implementation**
+   We implemented all core features proposed in the project initiation phase. The development was organized into distinct modules to ensure the application was easy to test and debug:
 
-All user interface components are located in the lib/screens/ and lib/Pages/ directories. These screens are built using modular Flutter widgets to ensure a consistent design across different devices.
+   *User Authentication:
+      1.We established a secure login system using Firebase Authentication, allowing users to register and sign in reliably.
+      2.To maintain data quality, we integrated the email_validator package. This ensures that all user inputs are validated for correct formatting before being sent to the backend.
+   
+   *Item Scanning & Classification:
+      1.The scanning module utilizes the image_picker package to interface with the device's camera and gallery.
+      2.For image analysis, we developed a custom GoogleVisionService. Instead of processing images locally, this service converts images to Base64 format and transmits them securely to the Google Cloud Vision API via HTTP requests. The API            analyzes the image content and returns label annotations (e.g., "Plastic," "Glass").
+      3.These labels are then processed by our ItemClassifier to determine the correct waste category and display disposal instructions.
 
-Service Layer (Logic):
+   *Activity Tracker:
+      1.We implemented a complete CRUD (Create, Read, Update, Delete) system for tracking recycling habits, with data persistently stored in Cloud Firestore.
+      2.To visualize user progress, we integrated the fl_chart library, which renders dynamic bar and line charts on the ProgressSummaryScreen.
 
-Business logic and external API interactions are abstracted into the lib/services/ directory. For instance, google_vision_service.dart handles API communication, while recycling_activity_service.dart manages database operations. This separation keeps the UI code clean and focused on display logic.
+   *Manual Search:
+      1.A manual search feature allows users to query the Firestore database directly. This ensures users can find recycling guidelines even if the scanner cannot identify an item.
 
-Data Layer (Models):
+4.2 **Code Structure and Architecture**
+   To ensure the project remains maintainable and collaborative, we adopted a Layered Architecture that separates different aspects of the code:
 
-We defined specific data models, such as ScanRecord and RecyclingActivity, in the lib/models/ directory. These classes ensure data consistency and type safety throughout the application.
+   *1.Presentation Layer (UI):
+      All user interface components are located in the lib/screens/ and lib/Pages/ directories. These screens are built using modular Flutter widgets to ensure a consistent design across different devices.
 
-4.3 Packages and Dependencies
-The application leverages several key packages to extend its functionality:
+   *2.Service Layer (Logic):
+   Business logic and external API interactions are abstracted into the lib/services/ directory. For instance, google_vision_service.dart handles API communication, while recycling_activity_service.dart manages database operations. This       separation keeps the UI code clean and focused on display logic.
 
-firebase_core & cloud_firestore: facilitates connection to the Firebase backend and enables real-time database storage.
+   *3.Data Layer (Models):
+   We defined specific data models, such as ScanRecord and RecyclingActivity, in the lib/models/ directory. These classes ensure data consistency and type safety throughout the application.
 
-image_picker: enables access to the device's camera and photo library.
+4.3 **Packages and Dependencies**
+   The application leverages several key packages to extend its functionality:
+   
+   1.firebase_core & cloud_firestore: facilitates connection to the Firebase backend and enables real-time database storage.
+   2.image_picker: enables access to the device's camera and photo library.
+   3.http: allows the app to send RESTful API requests to the Google Cloud Vision API.
+   4.fl_chart: provides the tools to render visual graphs for the user's progress summary.
+   5.intl: handles date formatting to ensure timestamps are displayed correctly in the activity logs.
 
-http: allows the app to send RESTful API requests to the Google Cloud Vision API.
+4.4 **Backend Infrastructure (Firebase)**
+   We selected Firebase to provide a scalable backend infrastructure without the need for managing physical servers.
 
-fl_chart: provides the tools to render visual graphs for the user's progress summary.
+   *Authentication: Centralizes user management and secures session tokens.
+   *Cloud Firestore: Stores user profiles, scan history, and activity logs in a flexible, document-based structure that supports efficient querying.
 
-intl: handles date formatting to ensure timestamps are displayed correctly in the activity logs.
+4.5 **Collaborative Development**
+   The project was managed using GitHub to facilitate teamwork.
 
-4.4 Backend Infrastructure (Firebase)
-We selected Firebase to provide a scalable backend infrastructure without the need for managing physical servers.
+   *Branching Strategy: We utilized feature branches (e.g., feature/scanner, feature/auth) to isolate development tasks and prevent conflicts.
+   *Code Review: Pull requests were used to review and merge code into the main branch, ensuring stability and code quality.
 
-Authentication: Centralizes user management and secures session tokens.
+5. **References**
 
-Cloud Firestore: Stores user profiles, scan history, and activity logs in a flexible, document-based structure that supports efficient querying.
-
-4.5 Collaborative Development
-The project was managed using GitHub to facilitate teamwork.
-
-Branching Strategy: We utilized feature branches (e.g., feature/scanner, feature/auth) to isolate development tasks and prevent conflicts.
-
-Code Review: Pull requests were used to review and merge code into the main branch, ensuring stability and code quality.
-
-5. References
 Packages & Software
 
 Flutter Team. (n.d.). Flutter (Version 3.10.0) [Software Development Kit]. Google. https://flutter.dev
