@@ -150,9 +150,11 @@ Our group wanted to develop an app that solves a real-world problem while being 
    The development of RecycleMate focused on building a reliable and scalable mobile application. We utilized Flutter for cross-platform development to ensure a smooth user interface on Android, while Firebase was selected as our Backend-as-a-Service (BaaS) to manage data and authentication securely and efficiently.
 
 4.1 **Functional Implementation**
-   We implemented all core features proposed in the project initiation phase. The development was organized into distinct modules to ensure the application was easy to test and debug:
 
-   *User Authentication:
+   We implemented all core features proposed in the project initiation phase. The development was organized into distinct modules to ensure the application was easy to test and debug:
+   
+   -User Authentication:
+   
       1.We established a secure login system using Firebase Authentication, allowing users to register and sign in reliably.
       2.To maintain data quality, we integrated the email_validator package. This ensures that all user inputs are validated for correct formatting before being sent to the backend.
    
