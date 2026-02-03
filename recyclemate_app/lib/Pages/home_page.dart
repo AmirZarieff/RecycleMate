@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart'; 
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../services/routes.dart';
 import '../services/firestore_data_seeder.dart';
 
@@ -119,6 +115,7 @@ class _HomePageDummyState extends State<HomePageDummy> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green[700],
+        automaticallyImplyLeading: false,
         title: const Text(
           'RecycleMate',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -150,31 +147,6 @@ class _HomePageDummyState extends State<HomePageDummy> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Username display with StreamBuilder
-                  StreamBuilder<DocumentSnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(_user?.uid)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      String displayName = "User";
-                      if (snapshot.hasData && snapshot.data!.exists) {
-                        Map<String, dynamic> data =
-                            snapshot.data!.data() as Map<String, dynamic>;
-                        displayName = data['username'] ?? "User";
-                      }
-
-                      return Text(
-                        'Hi, $displayName!',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 4),
                   const Text(
                     'Welcome to',
                     style: TextStyle(fontSize: 18, color: Colors.white),
@@ -218,9 +190,9 @@ class _HomePageDummyState extends State<HomePageDummy> {
                       }
 
                       return Text(
-                        "$displayName !",
+                        displayName,
                         style: TextStyle(
-                          fontSize: 18, // Slightly larger than the email size
+                          fontSize: 16, // Slightly larger than the email size
                           fontWeight: FontWeight.w500,
                           color: Colors.white.withValues(alpha: 0.9),
                         ),

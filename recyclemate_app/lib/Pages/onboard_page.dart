@@ -29,13 +29,6 @@ class _OnStartState extends State<OnStart> {
       'color': Color(0xFF2196F3), // Blue
     },
     {
-      'title': 'Earn Eco-Points',
-      'description':
-          'Get rewarded for recycling and redeem points for exciting gifts.',
-      'icon': Icons.card_giftcard,
-      'color': Color(0xFF9C27B0), // Purple
-    },
-    {
       'title': 'Track Your Impact',
       'description':
           'See how your recycling efforts contribute to a greener planet.',
