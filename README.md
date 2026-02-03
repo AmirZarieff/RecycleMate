@@ -133,14 +133,249 @@ Our group wanted to develop an app that solves a real-world problem while being 
 
 ## 2. Requirement Analysis & Training
 
+### Data Storage & CRUD Operations
 
+#### Database Collections
 
+**Collection 1: `recycling_activities`**
+```json
+{
+  "userId": "string",
+  "materialType": "string",
+  "weight": "double (KG)",
+  "points": "integer",
+  "date": "Timestamp",
+  "status": "string"
+}
+```
 
+**Collection 2: `scan_records`**
+```json
+{
+  "userId": "string",
+  "code": "string",
+  "materialType": "string",
+  "weightKg": "double",
+  "points": "integer",
+  "createdAt": "Timestamp"
+}
+```
 
+#### CRUD Operations
 
+**CREATE** - Add new activity:
+```dart
+Future<String> addActivity(RecyclingActivity activity) async {
+  DocumentReference docRef = await _collection.add(activity.toMap());
+  return docRef.id;
+}
+```
 
+**READ** - Get user activities:
+```dart
+Stream<List<RecyclingActivity>> getUserActivities(String userId) {
+  return _collection
+      .where('userId', isEqualTo: userId)
+      .orderBy('date', descending: true)
+      .snapshots();
+}
+```
 
+**UPDATE** - Update activity:
+```dart
+Future<void> updateActivity(RecyclingActivity activity) async {
+  await _collection.doc(activity.id).update(activity.toMap());
+}
+```
 
+**DELETE** - Delete activity:
+```dart
+Future<void> deleteActivity(String activityId) async {
+  await _collection.doc(activityId).delete();
+}
+```
+
+---
+
+### Packages and Plugins
+
+#### Current Dependencies
+
+| Package | Version | Purpose | Smartphone | Wearable |
+|---------|---------|---------|------------|----------|
+| firebase_core | 3.8.1 | Firebase init | ✅ | ✅ |
+| firebase_auth | 5.3.4 | Authentication | ✅ | ✅ |
+| cloud_firestore | 5.6.0 | Database | ✅ | ✅ |
+| image_picker | 1.0.4 | Camera access | ✅ | ❌ |
+| http | 1.1.0 | API requests | ✅ | ✅ |
+| fl_chart | 1.1.1 | Charts | ✅ | ⚠️ |
+| email_validator | 3.0.0 | Validation | ✅ | ✅ |
+| intl | 0.20.2 | Formatting | ✅ | ✅ |
+
+**Compatibility:**
+- ✅ Fully compatible
+- ⚠️ Limited support (small screens)
+- ❌ Not supported (no camera on most wearables)
+
+---
+
+### Platform Compatibility
+
+### Smartphones: ✅ EXCELLENT
+- **Android:** API 21+ (99% devices)
+- **iOS:** iOS 12.0+ (95% devices)
+- All features fully supported
+
+### Wearables: ⚠️ LIMITED
+- **Wear OS:** Requires separate module
+- **Apple Watch:** Needs native SwiftUI app
+- **Limitations:** No camera, small screen, limited battery
+
+**Recommendation:** Focus on smartphones first
+
+---
+
+### Sequence Diagrams
+
+#### User Login
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as LoginPage
+    participant Auth as FirebaseAuth
+    participant Nav as Navigator
+
+    User->>UI: Enter credentials
+    User->>UI: Tap Login
+    UI->>Auth: signInWithEmailAndPassword()
+    
+    alt Success
+        Auth-->>UI: Return User
+        UI->>Nav: Navigate to HomePage
+    else Failed
+        Auth-->>UI: Return error
+        UI-->>User: Show error message
+    end
+```
+
+#### Scan Item
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as ScanScreen
+    participant Camera as ImagePicker
+    participant Vision as GoogleVision
+    participant DB as Firestore
+
+    User->>UI: Tap Scan button
+    UI->>Camera: Open camera
+    Camera-->>UI: Return image
+    UI->>Vision: Analyze image
+    Vision-->>UI: Return material type
+    UI-->>User: Show result
+    User->>UI: Confirm save
+    UI->>DB: Save scan record
+    DB-->>UI: Saved
+```
+
+#### Add Activity
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as ActivityTracker
+    participant Service as ActivityService
+    participant DB as Firestore
+
+    User->>UI: Enter activity details
+    User->>UI: Tap Save
+    UI->>UI: Calculate points
+    UI->>Service: addActivity()
+    Service->>DB: Create document
+    DB-->>Service: Return ID
+    Service-->>UI: Success
+    UI-->>User: Show updated list
+```
+
+#### View Progress
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as ProgressScreen
+    participant Service as ActivityService
+    participant DB as Firestore
+
+    User->>UI: Open progress
+    UI->>Service: getWeeklySummary()
+    Service->>DB: Query activities
+    DB-->>Service: Return data
+    Service->>Service: Calculate totals
+    Service-->>UI: Return summary
+    UI-->>User: Display charts
+```
+
+---
+
+### Screen Navigation Flow
+
+```mermaid
+graph TD
+    Start([App Launch]) --> OnStart[Onboard Page]
+    
+    OnStart --> Login[Login Page]
+    OnStart --> Register[Register Page]
+    
+    Login --> |Forgot?| ForgetPwd[Reset Password]
+    Login --> |Success| Home[Home Page]
+    Register --> |Success| Home
+    
+    Home --> |Nav| Scan[Scan Screen]
+    Home --> |Nav| Search[Search Page]
+    Home --> |Nav| History[Scan History]
+    
+    Home --> Activity[Activity Tracker]
+    Home --> Progress[Progress Summary]
+    Home --> EduGuide[Educational Guide]
+    
+    Scan --> |Save| History
+    Search --> EduGuide
+    Activity --> Progress
+    
+    style Home fill:#4CAF50
+    style Start fill:#2196F3
+    style Scan fill:#FF9800
+```
+
+#### Navigation Routes
+
+```dart
+Routes:
+  / → OnboardPage
+  /login → LoginPage
+  /register → RegisterPage
+  /home → HomePage
+  /scan → ScanScreen
+  /scan-history → ScanHistoryScreen
+  /search → SearchPage
+  /educational-guide → EducationalGuidePage
+  /activity-tracker → ActivityTrackerScreen
+  /progress-summary → ProgressSummaryScreen
+```
+
+#### Bottom Navigation (HomePage)
+
+```
+┌─────────────────────────────────┐
+│       RecycleMate               │
+├─────────────────────────────────┤
+│     [Main Content]              │
+├─────────────────────────────────┤
+│ [Home] [Scan] [Search] [History]│
+└─────────────────────────────────┘
+```
 
 ---
 
