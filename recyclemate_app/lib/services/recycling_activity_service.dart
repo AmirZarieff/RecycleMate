@@ -85,10 +85,16 @@ class RecyclingActivityService {
     }
   }
 
-  /// Get weekly summary (last 7 days)
+  /// Get weekly summary (current week from Sunday to Saturday)
   Future<Map<String, dynamic>> getWeeklySummary(String userId) async {
-    DateTime endDate = DateTime.now();
-    DateTime startDate = endDate.subtract(const Duration(days: 7));
+    DateTime now = DateTime.now();
+    
+    // Calculate the start of the week (Sunday)
+    int daysFromSunday = now.weekday % 7; // Sunday = 0, Monday = 1, ..., Saturday = 6
+    DateTime startDate = DateTime(now.year, now.month, now.day).subtract(Duration(days: daysFromSunday));
+    
+    // Calculate the end of the week (Saturday)
+    DateTime endDate = startDate.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     QuerySnapshot snapshot = await _collection
         .where('userId', isEqualTo: userId)
@@ -119,10 +125,11 @@ class RecyclingActivityService {
     };
   }
 
-  /// Get monthly summary (last 30 days)
+  /// Get monthly summary (current calendar month)
   Future<Map<String, dynamic>> getMonthlySummary(String userId) async {
-    DateTime endDate = DateTime.now();
-    DateTime startDate = endDate.subtract(const Duration(days: 30));
+    DateTime now = DateTime.now();
+    DateTime startDate = DateTime(now.year, now.month, 1);
+    DateTime endDate = DateTime(now.year, now.month + 1, 1).subtract(const Duration(days: 1, hours: -23, minutes: -59, seconds: -59));
 
     QuerySnapshot snapshot = await _collection
         .where('userId', isEqualTo: userId)
