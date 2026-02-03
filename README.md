@@ -508,11 +508,14 @@ The project was managed using GitHub to facilitate teamwork.
 
 ### 5. References
 
+
+
 **Packages & Software**
 
 * Flutter Team. (n.d.). Flutter (Version 3.10.0) [Software Development Kit]. Google. https://flutter.dev
 * Google. (n.d.). Firebase [Backend-as-a-Service Platform]. https://firebase.google.com
 * Flutter Team. (2025). image_picker (Version 1.0.4) [Computer software]. Pub.dev. https://pub.dev/packages/image_picker
+* Flutter Team. (2025). email_validator (Version 3.0.0) [Computer software]. Pub.dev. https://pub.dev/packages/email_validator
 * Khoshabi, I. (2025). fl_chart (Version 1.1.1) [Computer software]. Pub.dev. https://pub.dev/packages/fl_chart
 * Firebase Team. (2025). cloud_firestore (Version 5.6.0) [Computer software]. Pub.dev. https://pub.dev/packages/cloud_firestore
 * Firebase Team. (2025). firebase_auth (Version 5.3.4) [Computer software]. Pub.dev. https://pub.dev/packages/firebase_auth
@@ -522,6 +525,7 @@ The project was managed using GitHub to facilitate teamwork.
 
 * Google. (2026). Gemini [Large language model]. https://gemini.google.com
     * Usage: Assisted in generating the initial project structure, debugging Flutter widget trees, and formatting the documentation.
+    * Usage: Assisted in suggesting suitable colors, transparent design, mini pages on Onboarding page.
 * OpenAI. (2025). ChatGPT (GPT-4) [Large language model]. https://chat.openai.com
     * Usage: Used for brainstorming the "RecycleMate" app concept and refining the problem statement in the Project Initiation phase.
 
