@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; 
 import '../services/routes.dart';
 import '../services/firestore_data_seeder.dart';
 
@@ -133,14 +134,44 @@ class _HomePageDummyState extends State<HomePageDummy> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  if (_user != null && _user!.email != null)
-                    Text(
-                      _user!.email!,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.9),
-                      ),
-                    ),
+                  
+                  // Real-time Username Display
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(_user?.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const Text("Error loading name", style: TextStyle(color: Colors.white70));
+                      }
+                      
+                      // Show a small loader or placeholder while waiting
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox(
+                          height: 14,
+                          width: 14,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        );
+                      }
+
+                      // Extract username from Firestore
+                      String displayName = "User";
+                      if (snapshot.hasData && snapshot.data!.exists) {
+                        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                        displayName = data['username'] ?? "User";
+                      }
+
+                      return Text(
+                        "$displayName !",
+                        style: TextStyle(
+                          fontSize: 18, // Slightly larger than the email size
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
