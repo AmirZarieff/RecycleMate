@@ -11,6 +11,7 @@ class RecyclingActivity {
   final DateTime date;
   final String? notes;
   final String status; // 'completed', 'pending', 'cancelled'
+  final DateTime createdAt; // When the activity was logged
 
   RecyclingActivity({
     required this.id,
@@ -21,7 +22,8 @@ class RecyclingActivity {
     required this.date,
     this.notes,
     this.status = 'completed',
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   /// Convert RecyclingActivity to Map for Firestore
   Map<String, dynamic> toMap() {
@@ -33,6 +35,7 @@ class RecyclingActivity {
       'date': Timestamp.fromDate(date),
       'notes': notes,
       'status': status,
+      'createdAt': Timestamp.fromDate(createdAt),
     };
   }
 
@@ -48,6 +51,9 @@ class RecyclingActivity {
       date: (data['date'] as Timestamp).toDate(),
       notes: data['notes'],
       status: data['status'] ?? 'completed',
+      createdAt: data['createdAt'] != null 
+          ? (data['createdAt'] as Timestamp).toDate() 
+          : DateTime.now(),
     );
   }
 
@@ -61,6 +67,7 @@ class RecyclingActivity {
     DateTime? date,
     String? notes,
     String? status,
+    DateTime? createdAt,
   }) {
     return RecyclingActivity(
       id: id ?? this.id,
@@ -71,6 +78,7 @@ class RecyclingActivity {
       date: date ?? this.date,
       notes: notes ?? this.notes,
       status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -85,5 +93,21 @@ class RecyclingActivity {
       'Clothes': 8,
     };
     return ((pointsPerKg[materialType] ?? 10) * weight).round();
+  }
+
+  /// Check if this activity can still be edited
+  /// Activities can only be edited within 24 hours of creation
+  bool canEdit() {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+    return difference.inHours < 24;
+  }
+
+  /// Get remaining time to edit in hours
+  int getRemainingEditHours() {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
+    final remaining = 24 - difference.inHours;
+    return remaining > 0 ? remaining : 0;
   }
 }
