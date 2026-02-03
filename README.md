@@ -508,7 +508,9 @@ The project was managed using GitHub to facilitate teamwork.
 
 ### 5. References
 
-
+**Youtube Tutorial Videos**
+* HeyFlutter.com/Youtube.com. (2023). Flutter Firebase Authentication [2024] The Cleanest Way . [https://chat.openai.com](https://www.youtube.com/watch?v=4vKiJZNPhss&list=LL&index=1)
+    * Usage: Assisted in injecting firebase into our projects including login, register and forget password
 
 **Packages & Software**
 
