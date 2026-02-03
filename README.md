@@ -383,6 +383,67 @@ Routes:
 
 <img width="1387" height="643" alt="image" src="https://github.com/user-attachments/assets/3dd994e5-41ac-4189-bfca-4c8a93f343eb" />
 
+## 3. Project Design & Architecture
+
+We prioritized a user-centric design philosophy to ensure the app is accessible and efficient for our target audience.
+
+### 3.1 User Interface (UI)
+*Designed for mobile-first interaction.*
+* **Touch Optimization:** All interactive elements (buttons, icons) adhere to a minimum touch target size of 48x48px to accommodate thumb navigation.
+* **Responsive Layouts:** Utilized Flutter's `Flexible` and `Expanded` widgets to prevent overflow errors on different screen sizes.
+* **Visual Feedback:** Immediate visual cues (loading indicators, snackbars) are used to keep users informed of app stat
+
+<table>
+  <tr>
+    <td>Figma Design</td>
+    <td>Flutter App</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/figmaHome.png" width="250" /></td>
+    <td><img src="screenshots/HomePage.jpg" width="250" /></td>
+  </tr>
+</table>
+
+### 3.2 User Experience (UX)
+*Navigation with human intuition.*
+* **Linear Workflows:** The scanning process follows a strict linear path: `Dashboard -> Camera -> Processing -> Result`, reducing cognitive load.
+* **Persistent Navigation:** A bottom navigation bar allows instant switching between core features (Home, Scan, Tracker, Profile) without losing context.
+* **Error Prevention:** Input validation (e.g., on Login forms) prevents errors before they occur.
+
+<table>
+  <tr>
+     <th align="center">Step 1: Dashboard</th>
+    <th align="center">Step 2: Scan Item</th>
+    <th align="center">Step 3: Result</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/HomePage.jpg" width="200" />
+    </td>
+    <td align="center">
+      <img src="screenshots/ScanScreen.jpg" width="200" />
+    </td>
+    <td align="center">
+      <img src="screenshots/ScanHistory.jpg" width="200" />
+    </td>
+  </tr>
+</table>
+
+### 3.3 Consistency
+*Unified design language.*
+* **Global Theme:** We implemented a centralized `ThemeData` in `main.dart` to enforce our "Eco Green" (#4CAF50) color palette across all screens.
+* **Reusable Widgets:** Custom components (e.g., `CustomButton`, `CustomTextField`) were created to ensure identical padding, border radius, and typography throughout the app.
+
+<table>
+  <tr>
+    <td>Login screen</td>
+    <td>Search Screen</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/LoginPage.jpg" width="250" /></td>
+    <td><img src="screenshots/SearchQuery.jpg" width="250" /></td>
+  </tr>
+</table>
 
 ## 4. Project Development
 
