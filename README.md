@@ -4,7 +4,7 @@
 
 # **RecycleMate – Smart Recycling Helper App**
 
-## **Project Ideation & Initiation**
+## 1. Project Ideation & Initiation
 
 ### **Group Members**
 
@@ -141,6 +141,8 @@ Our group wanted to develop an app that solves a real-world problem while being 
 
 
 
+
+---
 
 ## 4. Project Development
 
