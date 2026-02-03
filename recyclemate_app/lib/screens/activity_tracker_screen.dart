@@ -150,7 +150,7 @@ class _ActivityTrackerScreenState extends State<ActivityTrackerScreen> {
         title: const Text('Delete Activity'),
         content: const Text('Are you sure you want to delete this activity?'),
         actions: [
-          TextButton(
+        TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
           ),
@@ -216,6 +216,11 @@ class _ActivityCard extends StatelessWidget {
                 activity.notes!,
                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
+            if (!activity.canEdit())
+              Text(
+                '🔒 Cannot edit (>24 hours)',
+                style: TextStyle(fontSize: 11, color: Colors.red[400]),
+              ),
           ],
         ),
         trailing: Row(
@@ -223,8 +228,11 @@ class _ActivityCard extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.edit, size: 20),
-              onPressed: onEdit,
-              color: Colors.blue,
+              onPressed: activity.canEdit() ? onEdit : null,
+              color: activity.canEdit() ? Colors.blue : Colors.grey,
+              tooltip: activity.canEdit() 
+                  ? 'Edit activity' 
+                  : 'Cannot edit after 24 hours',
             ),
             IconButton(
               icon: const Icon(Icons.delete, size: 20),
@@ -437,3 +445,6 @@ class _AddEditActivityDialogState extends State<_AddEditActivityDialog> {
     );
   }
 }
+
+
+
